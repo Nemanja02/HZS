@@ -1,12 +1,13 @@
 <?php
 	include_once("connection.php");
+	include_once("available_func.php");
 	include_once("plane.php");
 	$conn = connect();
 	$result = Array();
 	$sql = mysqli_query($conn, "SELECT * FROM letovi");
 	while ($row = $sql->fetch_assoc()) {
 		$timestamp = DateTime::createFromFormat('!m.d.Y', $row['depart_date'])->getTimestamp();
-		if (time() < $timestamp) {
+		if (time() < $timestamp && available($row['id'])) {
 			$obj = $emptyPlane;
 			$obj["id"] = $row["id"];
 			$obj["depart_date"] = $row["depart_date"];
